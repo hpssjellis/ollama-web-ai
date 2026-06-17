@@ -966,15 +966,15 @@ for (const f of myPendingFiles) {
 
 
 
-} else if (f.type === 'audio') {
-            // Inject raw downsampled base64 audio into the global audio collection array
-            if (!window.myAudioPayloads) window.myAudioPayloads = [];
-            window.myAudioPayloads.push(f.base64);
-        } else if (f.type === 'video') {
 
 
+        } else if (f.type === 'audio') {
+            // Push audio into the images array so it is included in the Ollama payload
+            images.push(f.base64); 
+        }
 
 
+else if (f.type === 'video') {
 
                 // Extract frames from video using canvas
                 const frames = await myExtractVideoFrames(f.dataUrl, 4);
@@ -1366,6 +1366,7 @@ for (const f of myPendingFiles) {
 
 
 
+
 // ── Build attachment chips for user message display ────────────────
     const myBuildAttachChipsHtml = (files) => {
         if (!files.length) return '';
@@ -1374,17 +1375,12 @@ for (const f of myPendingFiles) {
                 ? `<img src="${f.thumb}" style="width:28px;height:28px;object-fit:cover;border-radius:3px;">`
                 : `<span>${myTypeIcon[f.type]}</span>`;
             
-            // Safely determine which data stream variable to forward to our viewer pipeline
-            let myDataToSend = f.base64;
-            if (f.type === 'text') {
-                // If it's a code or text file, convert the raw text directly to base64 so myOpenMediaInNewTab can read it natively!
-                myDataToSend = btoa(unescape(encodeURIComponent(f.textContent || '')));
-            }
-
-            return `<span class="my-attach-chip type-${f.type}" title="Open Offline: ${myEscapeHtml(f.name)}" onclick="window.myOpenMediaInNewTab('${myEscapeHtml(f.name)}', '${f.mimeType}', '${myDataToSend}')" style="cursor: pointer;">${thumb} ${myEscapeHtml(f.name)}</span>`;
+            // Replaced the simple span layout wrapper with a clickable anchor viewer trigger
+            return `<span class="my-attach-chip type-${f.type}" title="Open Offline: ${myEscapeHtml(f.name)}" onclick="window.myOpenMediaInNewTab('${myEscapeHtml(f.name)}', '${f.mimeType}', '${f.base64}')" style="cursor: pointer;">${thumb} ${myEscapeHtml(f.name)}</span>`;
         }).join('');
         return `<div class="my-msg-attachments">${chips}</div>`;
     };
+
 
 
 
