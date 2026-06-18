@@ -5,6 +5,9 @@ Connecting Ollama LLM server to a local webpage for simplicity of use.
 https://hpssjellis.github.io/ollama-web-ai/
 
 
+Strongly suggest you don't use this file, it is more a testing ground for the PWA file at 
+
+Installable PWA at  https://webmcu-ai.github.io/ollama-gemma4-12b-pwa/index.html
 
 
 1. Install [ollama.com]90 download for windows
